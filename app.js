@@ -13,7 +13,7 @@ var tweetsRouter = require("./routes/tweets");
 var app = express();
 
 const cors = require("cors");
-const Tweet = require("./models/tweets");
+
 
 app.use(cors());
 app.use(logger("dev"));

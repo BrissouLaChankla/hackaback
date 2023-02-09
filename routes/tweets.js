@@ -37,12 +37,13 @@ router.post("/", (req, res) => {
     });
 
   
-    router.get("/:hastag", (req,res) => {
+    router.get("/:hashtag", (req,res) => {
       Tweet.find({
-        hastag: req.params.hastag
-        }).then(data => { 
+        hashtag: req.params.hashtag
+        })
+        .then(data => { 
         if (data) {
-          res.json({ result: true, message:data.message});
+          res.json({ result: true, message:data});
         } else {
           res.json({ result: false, error: "tweet not found" });
         }
