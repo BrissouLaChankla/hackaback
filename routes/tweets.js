@@ -23,7 +23,7 @@ router.post("/", (req, res) => {
         const hastag=req.body.message.match(regex);
         //creat new user par rapport au UserSchema
         const newTweet = new Tweet({
-            date: new Date(),
+            date: Date.now(),
             message: req.body.message ,
             hashtag: hastag,
             nb_of_likes: 0,
@@ -34,6 +34,19 @@ router.post("/", (req, res) => {
           res.json({ result: true, user: newDoc.user });
         });
       }
+    });
+
+  
+    router.get("/:hastag", (req,res) => {
+      Tweet.find({
+        hastag: req.params.hastag
+        }).then(data => { 
+        if (data) {
+          res.json({ result: true, message:data.message});
+        } else {
+          res.json({ result: false, error: "tweet not found" });
+        }
+      });
     });
 
 module.exports = router;
