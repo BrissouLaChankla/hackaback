@@ -8,7 +8,7 @@ const token = uid2(32);
 const User = require("../models/users");
 const Tweet = require("../models/tweets");
 const { checkBody } = require("../modules/checkBody");
-const {getIdFromToken} =require ("../modules/getIdFromToken")
+const { getIdFromToken } = require("../modules/getIdFromToken");
 
 router.post("/", (req, res) => {
   // check if tweet is empty
@@ -31,7 +31,7 @@ router.post("/", (req, res) => {
           date: Date.now(),
           message: req.body.message,
           hashtag: hastag,
-          hasliked:[],
+          hasliked: [],
           user: data.id,
         });
         // save the new tweet
@@ -96,7 +96,9 @@ router.put("/like", (req, res) => {
           _id: req.body.tweet_id,
         },
         {
-          hasliked: data.id,
+          $push: {
+            hasliked: data.id,
+          },
         }
       ).then((data) => {
         if (data) {
@@ -115,21 +117,18 @@ router.put("/like", (req, res) => {
 router.put("/dislike", (req, res) => {
   // check if user exist
 
-  User.findOne({token: req.body.token})
-  .then((dataUser) => {
+  User.findOne({ token: req.body.token }).then((dataUser) => {
     if (dataUser) {
       console.log(dataUser);
       res.json({ result: true, message: dataUser.id });
-    
-    Tweet.findOne ({tweet_id: req.body.tweet_id})
-    .then ((dataTweet) => {
-      if (dataTweet) {
-        console.log(dataTweet);
-        res.json({ result: true, message: dataTweet.hasliked});
-      }
-    
-    })
-  }
+
+      Tweet.findOne({ tweet_id: req.body.tweet_id }).then((dataTweet) => {
+        if (dataTweet) {
+          console.log(dataTweet);
+          res.json({ result: true, message: dataTweet.hasliked });
+        }
+      });
+    }
   });
 });
 
