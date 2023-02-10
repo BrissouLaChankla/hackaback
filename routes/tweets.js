@@ -58,7 +58,9 @@ router.get("/findbyhashtag/:hashtag", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  Tweet.find().then((data) => {
+  Tweet.find()
+  .populate('user')
+  .then((data) => {
     if (data) {
       res.json({ result: true, message: data });
     } else {
@@ -69,9 +71,11 @@ router.get("/", (req, res) => {
 
 router.get("/hashtags", (req, res) => {
   Tweet.find().then((data) => {
-    if (data.hashtag) {
-      console.log(data.hashtag);
-      res.json({ result: true, message: data });
+    if (data) {
+      const hashtags= data.map (function (obj) {
+        return obj.hashtag});    
+     const filterHashtags= hashtags.flat();
+      res.json({ result: true, message: filterHashtags });
     } else {
       res.json({ result: false, error: "hashtag not found" });
     }
