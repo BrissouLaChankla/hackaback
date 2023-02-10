@@ -116,18 +116,30 @@ router.put("/like", (req, res) => {
 
 router.put("/dislike", (req, res) => {
   // check if user exist
-
-  User.findOne({ token: req.body.token }).then((dataUser) => {
-    if (dataUser) {
-      console.log(dataUser);
-      res.json({ result: true, message: dataUser.id });
-
-      Tweet.findOne({ tweet_id: req.body.tweet_id }).then((dataTweet) => {
-        if (dataTweet) {
-          console.log(dataTweet);
-          res.json({ result: true, message: dataTweet.hasliked });
+  User.findOne({
+    token: req.body.token,
+  }).then((data) => {
+    if (data) {
+      console.log();
+      Tweet.updateOne(
+        {
+          _id: req.body.tweet_id,
+        },
+        {
+          $pull: {
+            hasliked: data.id,
+          },
+        }
+      ).then((data) => {
+        if (data) {
+          console.log();
+          res.json({ result: true, user: data.id });
+        } else {
+          res.json({ result: false, error: "not userID" });
         }
       });
+    } else {
+      res.json({ result: false, error: "not userID" });
     }
   });
 });
