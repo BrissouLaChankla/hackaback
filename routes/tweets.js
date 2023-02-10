@@ -31,7 +31,7 @@ router.post("/", (req, res) => {
           date: Date.now(),
           message: req.body.message,
           hashtag: hastag,
-          hasliked: 0,
+          hasliked:null,
           user: data.id,
         });
         // save the new tweet
@@ -120,15 +120,16 @@ router.put("/dislike", (req, res) => {
     if (dataUser) {
       console.log(dataUser);
       res.json({ result: true, message: dataUser.id });
-    }
+    
     Tweet.findOne ({tweet_id: req.body.tweet_id})
     .then ((dataTweet) => {
-      if (dataTweet){
+      if (dataTweet) {
         console.log(dataTweet);
         res.json({ result: true, message: dataTweet.hasliked});
       }
-    })
     
+    })
+  }
   });
 });
 
