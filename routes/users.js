@@ -28,7 +28,7 @@ router.post("/signup", (req, res) => {
       });
       // save the new user
       newUser.save().then((newDoc) => {
-        res.json({ result: true, firstname:newDoc.firstname, username: newDoc.username, token: newDoc.token });
+        res.json({ result: true, firstname:newDoc.firstname, username: newDoc.username, token: newDoc.token, id:newDoc._id });
       });
     } else {
       // user is already registered
@@ -49,7 +49,7 @@ router.post("/signin", (req, res) => {
   }).then((data) => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
       // user is registred
-      res.json({ result: true, firstname:data.firstname, username: data.username, token: data.token });
+      res.json({ result: true, firstname:data.firstname, username: data.username, token: data.token,id:data._id });
     } else {
       // user was not found DB
       res.json({ result: false, error: "User not found or wrong password" });
