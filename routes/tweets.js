@@ -31,7 +31,7 @@ router.post("/", (req, res) => {
           date: Date.now(),
           message: req.body.message,
           hashtag: hastag,
-          hasliked:null,
+          hasliked:[],
           user: data.id,
         });
         // save the new tweet
