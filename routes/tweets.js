@@ -113,7 +113,7 @@ router.put("/like", (req, res) => {
 
 router.delete("/:delete", (req, res) => {
   Tweet.deleteOne({
-    delete: req.params._id,
+    _id: req.params.delete,
   }).then((data) => {
     if (data) {
       console.log(data);
