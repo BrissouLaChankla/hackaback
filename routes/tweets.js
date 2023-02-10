@@ -59,22 +59,23 @@ router.get("/findbyhashtag/:hashtag", (req, res) => {
 
 router.get("/", (req, res) => {
   Tweet.find()
-  .populate('user')
-  .then((data) => {
-    if (data) {
-      res.json({ result: true, message: data });
-    } else {
-      res.json({ result: false, error: "tweet not found" });
-    }
-  });
+    .populate("user")
+    .then((data) => {
+      if (data) {
+        res.json({ result: true, message: data });
+      } else {
+        res.json({ result: false, error: "tweet not found" });
+      }
+    });
 });
 
 router.get("/hashtags", (req, res) => {
   Tweet.find().then((data) => {
     if (data) {
-      const hashtags= data.map (function (obj) {
-        return obj.hashtag});    
-     const filterHashtags= hashtags.flat();
+      const hashtags = data.map(function (obj) {
+        return obj.hashtag;
+      });
+      const filterHashtags = hashtags.flat();
       res.json({ result: true, message: filterHashtags });
     } else {
       res.json({ result: false, error: "hashtag not found" });
@@ -82,17 +83,45 @@ router.get("/hashtags", (req, res) => {
   });
 });
 
-//   router.get ("/alltweets", (req,res)=>{
-//     fetch(`https://newsapi.org/v2/top-headlines?sources=the-verge&apiKey=${NEWS_API_KEY}`)
-//     .then (response => response.json())
-//     .then (data => {
-//         if (data.status  === "ok"){
-//             res.json ({tweets: data.articles})
-//         } else{
-//             res.json ({articles:[]});
-//         }
+router.put("/like", (req, res) => {
+  // check if user exist
+  User.findOne({
+    token: req.body.token,
+  }).then((data) => {
+    if (data) {
+      console.log();
+      Tweet.updateOne(
+        {
+          _id: req.body.tweet_id,
+        },
+        {
+          hasliked: data.id,
+        }
+      ).then((data) => {
+        if (data) {
+          console.log();
+          res.json({ result: true, user: data.id });
+        } else {
+          res.json({ result: false, error: "not userID" });
+        }
+      });
+    } else {
+      res.json({ result: false, error: "not userID" });
+    }
+  });
+});
 
-//     });
-// });
+router.delete("/:delete", (req, res) => {
+  Tweet.deleteOne({
+    delete: req.params._id,
+  }).then((data) => {
+    if (data) {
+      console.log(data);
+      res.json({ result: true, message: data });
+    } else {
+      res.json({ result: false, error: "tweet not found" });
+    }
+  });
+});
 
 module.exports = router;
